@@ -1,55 +1,70 @@
 import asyncio
+import logging
+import sys
 from customtkinter import *
 
 from .pages import update_page
 from ..libs import lib
-# Modes: "System" (standard), "Dark", "Light"
-set_appearance_mode("Dark")
-# Themes: "blue" (standard), "green", "dark-blue"
-set_default_color_theme("blue")
+
+# Appearance modes
+DARK_MODE = "Dark"
+LIGHT_MODE = "Light"
+SYSTEM_MODE = "System"
+
+# Color themes
+BLUE_THEME = "blue"
+GREEN_THEME = "green"
+DARK_BLUE_THEME = "dark-blue"
+
+set_appearance_mode(DARK_MODE)
+set_default_color_theme(BLUE_THEME)
 
 
 class App(CTk):
-    WIDTH = 700
-    HEIGHT = 400
+    WIDTH: int = 700
+    HEIGHT: int = 400
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
         self.title(lib.APP_NAME)
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        # self.minsize(App.WIDTH, App.HEIGHT)
 
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        if sys.platform == "darwin":
-            self.bind("<Command-q>", self.on_closing)
-            self.bind("<Command-w>", self.on_closing)
-            self.createcommand('tk::mac::Quit', self.on_closing)
+        self.setup_close_handler()
 
-        # configure grid layout (1x1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
-        self.title_label = CTkLabel(master=self,
-                                    text=lib.APP_NAME,
-                                    font=("Roboto Medium", -16),
-                                    )
+        self.title_label = CTkLabel(
+            master=self, text=lib.APP_NAME, font=("Roboto Medium", -16),
+        )
         self.title_label.grid(row=0, column=0, pady=5, padx=10)
 
         self.frame = update_page.UpdatePage(self, self, self.loop)
         self.frame.grid(row=1, sticky="nswe", padx=20, pady=20)
 
-    # def change_mode(self):
-    #     if self.switch_dark_mode.get() == 1:
-    #         set_appearance_mode("dark")
-    #     else:
-    #         set_appearance_mode("light")
+    def setup_close_handler(self) -> None:
+        self.protocol("WM_DELETE_WINDOW", self.handle_close)
+        if sys.platform == "darwin":
+            self.bind("<Command-q>", self.handle_close)
+            self.bind("<Command-w>", self.handle_close)
+            self.createcommand("tk::mac::Quit", self.handle_close)
 
-    def on_closing(self):
+    def handle_close(self) -> None:
+        if self.loop.is_running():
+            try:
+                future = asyncio.ensure_future(self.do_close())
+                self.loop.run_until_complete(future)
+            except RuntimeError:
+                logging.exception("Error occurred while trying to close the application")
+        else:
+            self.destroy()
+
+    async def do_close(self) -> None:
+        self.loop.stop()
         self.destroy()
 
-    def start(self):
+    def start(self) -> None:
         self.mainloop()
-        self.loop.run_forever()
