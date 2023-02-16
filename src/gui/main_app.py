@@ -1,3 +1,4 @@
+import asyncio
 from customtkinter import *
 
 from .pages import update_page
@@ -14,6 +15,8 @@ class App(CTk):
 
     def __init__(self):
         super().__init__()
+
+        self.loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
 
         self.title(lib.APP_NAME)
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
@@ -35,7 +38,7 @@ class App(CTk):
                                     )
         self.title_label.grid(row=0, column=0, pady=5, padx=10)
 
-        self.frame = update_page.UpdatePage(self, self)
+        self.frame = update_page.UpdatePage(self, self, self.loop)
         self.frame.grid(row=1, sticky="nswe", padx=20, pady=20)
 
     # def change_mode(self):
@@ -49,3 +52,4 @@ class App(CTk):
 
     def start(self):
         self.mainloop()
+        self.loop.run_forever()
