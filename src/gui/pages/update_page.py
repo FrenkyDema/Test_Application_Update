@@ -13,6 +13,8 @@ from ...libs.lib import CONFIG_FILE
 
 import logging
 
+import logging
+
 async def update_async(latest_release):
     logger = logging.getLogger(__name__)
     logger.info("Starting async update")
@@ -40,10 +42,14 @@ async def update_async(latest_release):
         shutil.move(exe_asset['name'], exe_path)
 
 
-        # remove old directory
+        # Rimuovere lavecchia cartella dell' applicazione
+        shutil.rmtree(os.path.dirname(os.path.dirname(lib.resource_path(""))))
 
         # Avvia l'applicazione aggiornata
         os.startfile(exe_path)
+
+        # Chiude la vecchia applicazione
+        os._exit(0)
     else:
         error_message = "Nessun file exe trovato nella release più recente."
         logger.error(error_message)
