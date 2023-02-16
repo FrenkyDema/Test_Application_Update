@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/dev/valorant_change_audio_language/src/main.py"
+   "value": "C:/dev/Test_Application_Update/src/main.py"
   },
   {
    "optionDest": "onefile",
@@ -16,10 +16,6 @@
   {
    "optionDest": "console",
    "value": true
-  },
-  {
-   "optionDest": "icon_file",
-   "value": "C:/ProgramData/Riot Games/Metadata/valorant.live/valorant.live.ico"
   },
   {
    "optionDest": "name",
@@ -83,11 +79,11 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/dev/valorant_change_audio_language/src;src/"
+   "value": "C:/Python310/Lib/tkinter;tkinter/"
   },
   {
    "optionDest": "datas",
-   "value": "C:/Python310/Lib/tkinter;tkinter/"
+   "value": "C:/dev/Test_Application_Update/src;src/"
   }
  ],
  "nonPyinstallerOptions": {

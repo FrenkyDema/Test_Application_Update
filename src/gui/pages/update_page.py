@@ -11,6 +11,7 @@ from ...libs.lib import CONFIG_FILE
 
 
 async def update_async(latest_release):
+    print("update_async")
     # Scarica l'aggiornamento dal repository su GitHub
     async with aiohttp.ClientSession() as session:
         async with session.get(latest_release['zipball_url']) as response:
@@ -83,8 +84,11 @@ class UpdatePage(CTkFrame):
 
     def check_for_updates_thread(self):
         print("check_for_updates_thread")
-        # self.loop.create_task(self.check_for_updates())
         self.loop.run_until_complete(self.check_for_updates())
+
+    def update_app_thread(self, latest_release):
+        print("update_app_thread")
+        self.loop.run_until_complete(update_async(latest_release))
 
     async def check_for_updates(self):
         current_version = lib.get_key_value_json(CONFIG_FILE, "version")
@@ -96,7 +100,9 @@ class UpdatePage(CTkFrame):
 
         # Recupera la versione più recente dalla repository su GitHub
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'https://api.github.com/repos/{lib.get_key_value_json(CONFIG_FILE, "repo_owner")}/{lib.get_key_value_json(CONFIG_FILE, "repo_name")}/releases/latest') as response:
+            async with session.get(
+                f'https://api.github.com/repos/{lib.get_key_value_json(CONFIG_FILE, "repo_owner")}/{lib.get_key_value_json(CONFIG_FILE, "repo_name")}/releases/latest'
+            ) as response:
                 if response.status == 200:
                     latest_release = await response.json()
                     latest_version = latest_release['tag_name']
@@ -105,18 +111,17 @@ class UpdatePage(CTkFrame):
                         self.update_button = CTkButton(
                             self,
                             text="Aggiorna ora",
-                            command=lambda: asyncio.ensure_future(
-                                update_async(latest_release))
+                            command=lambda: self.update_app_thread(
+                                latest_release)
                         )
                         self.update_button.grid(
                             row=2, column=0, padx=20, pady=10)
 
                 else:
-                    
                     # Gestione dell'errore
                     messagebox.showerror(
                         "Error", "Nessun aggiornamento trovato.")
-                    self.update_button_state("loaded")
+                self.update_button_state("loaded")
         # Riabilita il bottone di aggiornamento e nasconde l'icona animata
         self.check_updates_button.configure(state='normal')
         self.check_updates_button.configure(image='')

@@ -110,7 +110,7 @@ def get_dix_json(file_name: str):
 def default_config_values():
     print("default config values")
     dix = {
-        "version": "0.0.0-alpha",
+        "version": "v0.0.0",
         "repo_owner": 'FrenkyDema',
         "repo_name": 'Test_Application_Update'
     }
