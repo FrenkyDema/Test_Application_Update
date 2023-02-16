@@ -1,4 +1,5 @@
 import asyncio
+import shutil
 from tkinter import messagebox
 import aiohttp
 import webbrowser
@@ -10,19 +11,50 @@ from ...libs import lib
 from ...libs.lib import CONFIG_FILE
 
 
+import logging
+
+import logging
+
 async def update_async(latest_release):
-    print("update_async")
-    # Scarica l'aggiornamento dal repository su GitHub
-    async with aiohttp.ClientSession() as session:
-        async with session.get(latest_release['zipball_url']) as response:
-            with open('latest_release.zip', 'wb') as f:
-                f.write(await response.read())
+    logger = logging.getLogger(__name__)
+    logger.info("Starting async update")
 
-    # Aggiorna il file di configurazione locale con la nuova versione
-    lib.update_key_json(CONFIG_FILE, "version", latest_release['tag_name'])
+    # Cerca il file exe tra gli asset della release
+    exe_asset = None
+    for asset in latest_release['assets']:
+        if asset['name'].endswith('.exe'):
+            exe_asset = asset
+            break
 
-    # Avvia l'applicazione aggiornata
-    os.startfile('latest_release.zip')
+    # Controlla se è stato trovato un file exe tra gli asset
+    if exe_asset is not None:
+        # Scarica il file exe
+        async with aiohttp.ClientSession() as session:
+            async with session.get(exe_asset['browser_download_url']) as response:
+                with open(exe_asset['name'], 'wb') as f:
+                    f.write(await response.read())
+
+        # Sostituisce il file exe dell'applicazione con il nuovo file
+        app_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        exe_path = os.path.join(app_path, lib.APP_NAME + '.exe')
+        if os.path.exists(exe_path):
+            os.remove(exe_path)
+        shutil.move(exe_asset['name'], exe_path)
+
+
+        # Rimuovere lavecchia cartella dell' applicazione
+        shutil.rmtree(os.path.dirname(os.path.dirname(lib.resource_path(""))))
+
+        # Avvia l'applicazione aggiornata
+        os.startfile(exe_path)
+
+        # Chiude la vecchia applicazione
+        os._exit(0)
+    else:
+        error_message = "Nessun file exe trovato nella release più recente."
+        logger.error(error_message)
+        messagebox.showerror("Error", error_message)
+
 
 
 class UpdatePage(CTkFrame):
