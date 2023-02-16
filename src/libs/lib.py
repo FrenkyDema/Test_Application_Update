@@ -18,7 +18,7 @@ image_path = 'src\\resources\\icons\\'
 language_path = 'src\\resources\\languages\\'
 
 APP_NAME = "Test_Application_Update"
-
+VERSION = "v0.0.0"
 CONFIG_FILE = "config.json"
 
 # ================== Temp Files functions ==================
@@ -33,15 +33,17 @@ def resource_temp_path(relative_path: str) -> str:
 
 # ================== File functions ==================
 
-def resource_path(relative_path: str):
-    base_path = user_data_dir(appname=APP_NAME, appauthor=False)
+def resource_path(relative_path: str,):
+    base_path = user_data_dir(
+        appname=APP_NAME, appauthor=False, version=VERSION)
     print("Local - ", os.path.join(base_path, relative_path))
     return os.path.join(base_path, relative_path)
 
 
 def create_app_files():
     print("create app files")
-    copy_dir(resource_temp_path(file_path), resource_path(file_path))
+    copy_dir(resource_temp_path(file_path), resource_path(
+        file_path), resource_temp_path(image_path))
 
 
 def copy_dir(src: str, dst: str, ignore: str = ""):
@@ -110,9 +112,9 @@ def get_dix_json(file_name: str):
 def default_config_values():
     print("default config values")
     dix = {
-        "version": "v0.0.0",
+        "version": VERSION,
         "repo_owner": 'FrenkyDema',
-        "repo_name": 'Test_Application_Update'
+        "repo_name": APP_NAME
     }
 
     update_json(CONFIG_FILE, dix)
@@ -122,6 +124,7 @@ def default_config_values():
 
 def get_image_path(image_name: str) -> str:
     return resource_temp_path(image_path + image_name)
+
 
 boold = True
 if __name__ == "__main__":
