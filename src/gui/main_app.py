@@ -37,10 +37,9 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
-        self.title_label = CTkLabel(master=self,
-                                    text=lib.APP_NAME,
-                                    font=("Roboto Medium", -16),
-                                    )
+        self.title_label = CTkLabel(
+            master=self, text=lib.APP_NAME, font=("Roboto Medium", -16),
+        )
         self.title_label.grid(row=0, column=0, pady=5, padx=10)
 
         self.frame = update_page.UpdatePage(self, self, self.loop)
@@ -51,16 +50,19 @@ class App(CTk):
         if sys.platform == "darwin":
             self.bind("<Command-q>", self.handle_close)
             self.bind("<Command-w>", self.handle_close)
-            self.createcommand('tk::mac::Quit', self.handle_close)
+            self.createcommand("tk::mac::Quit", self.handle_close)
 
     def handle_close(self) -> None:
-        try:
-            future = asyncio.ensure_future(self.close())
-            self.loop.run_until_complete(future)
-        except RuntimeError as e:
-            logging.exception(e)
+        if self.loop.is_running():
+            try:
+                future = asyncio.ensure_future(self.do_close())
+                self.loop.run_until_complete(future)
+            except RuntimeError:
+                logging.exception("Error occurred while trying to close the application")
+        else:
+            self.destroy()
 
-    async def close(self) -> None:
+    async def do_close(self) -> None:
         self.loop.stop()
         self.destroy()
 
