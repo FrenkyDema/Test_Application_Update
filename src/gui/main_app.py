@@ -1,11 +1,14 @@
 import asyncio
+import sys
 from customtkinter import *
 
 from .pages import update_page
 from ..libs import lib
+
 # Modes: "System" (standard), "Dark", "Light"
 set_appearance_mode("Dark")
-# Themes: "blue" (standard), "green", "dark-blue"
+
+# Themes: "blue" (standard), "green", "dark-blue")
 set_default_color_theme("blue")
 
 
@@ -20,15 +23,9 @@ class App(CTk):
 
         self.title(lib.APP_NAME)
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
-        # self.minsize(App.WIDTH, App.HEIGHT)
 
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        if sys.platform == "darwin":
-            self.bind("<Command-q>", self.on_closing)
-            self.bind("<Command-w>", self.on_closing)
-            self.createcommand('tk::mac::Quit', self.on_closing)
+        self.setup_window_close()
 
-        # configure grid layout (1x1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
@@ -41,15 +38,33 @@ class App(CTk):
         self.frame = update_page.UpdatePage(self, self, self.loop)
         self.frame.grid(row=1, sticky="nswe", padx=20, pady=20)
 
-    # def change_mode(self):
-    #     if self.switch_dark_mode.get() == 1:
-    #         set_appearance_mode("dark")
-    #     else:
-    #         set_appearance_mode("light")
+    def setup_window_close(self):
+        self.protocol("WM_DELETE_WINDOW", self.on_closing_wrapper)
+        if sys.platform == "darwin":
+            self.bind("<Command-q>", self.on_closing_wrapper)
+            self.bind("<Command-w>", self.on_closing_wrapper)
+            self.createcommand('tk::mac::Quit', self.on_closing_wrapper)
 
-    def on_closing(self):
-        self.destroy()
+    def on_closing_wrapper(self):
+        if not self.loop.is_closed():
+            future = asyncio.ensure_future(self.on_closing())
+            self.loop.run_until_complete(future)
+
+    async def on_closing(self, future: asyncio.Future):
+        # Cancella tutte le task se c'è un event loop in esecuzione
+        if asyncio.get_running_loop():
+            tasks = [task for task in asyncio.all_tasks(
+            ) if task is not asyncio.current_task()]
+            [task.cancel() for task in tasks]
+
+            # Attendi che tutte le task siano state cancellate
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+        # Chiudi l'event loop
+        if not self.loop.is_closed():
+            self.loop.stop()
+            self.loop.close()
+        future.set_result(None)
 
     def start(self):
         self.mainloop()
-        self.loop.run_forever()

@@ -50,22 +50,19 @@ class UpdatePage(CTkFrame):
         self.version.grid(
             row=1, column=0, columnspan=2, padx=5,)
 
-        self.loading_gif = Image.open(lib.get_image_path('loading.gif'))
-        self.loading_gif_frames = [
-            Image.frombytes(
-                self.loading_gif.mode, self.loading_gif.size, frame.tobytes())
-            for frame in ImageSequence.Iterator(self.loading_gif)
+        self.loading_gif_frames: list[Image.Image] = [
+            frame.copy() for frame in ImageSequence.Iterator(Image.open(lib.get_image_path('loading.gif')))
         ]
 
     def animate_loading_gif(self):
-        self.check_updates_button.configure(image=CTkImage(
+        self.version.configure(image=CTkImage(
             light_image=self.loading_gif_frames[self.loading_gif_index],
             size=(30, 30)
         ))
         self.loading_gif_index = (
             self.loading_gif_index + 1) % len(self.loading_gif_frames)
         self.loading_gif_animation_id = self.after(
-            100, self.animate_loading_gif)
+            50, self.animate_loading_gif)
 
     def update_button_state(self, state):
         if state == "loading":
@@ -74,9 +71,10 @@ class UpdatePage(CTkFrame):
             self.loading_gif_index = 1
             self.animate_loading_gif()
         elif state == "loaded":
+            self.after_cancel(self.loading_gif_animation_id)
             self.check_updates_button.configure(
                 text="Controlla aggiornamenti", state="normal")
-            self.after_cancel(self.loading_gif_animation_id)
+            self.version.configure(image=None)
 
     async def open_github(self):
         url = f'https://api.github.com/repos/{lib.get_key_value_json(CONFIG_FILE, "repo_owner")}/{lib.get_key_value_json(CONFIG_FILE, "repo_name")}/releases/latest'
@@ -117,11 +115,8 @@ class UpdatePage(CTkFrame):
                         self.update_button.grid(
                             row=2, column=0, padx=20, pady=10)
 
-                else:
-                    # Gestione dell'errore
-                    messagebox.showerror(
-                        "Error", "Nessun aggiornamento trovato.")
+                    else:
+                        # Gestione dell'errore
+                        messagebox.showerror(
+                            "Error", "Nessun aggiornamento trovato.")
                 self.update_button_state("loaded")
-        # Riabilita il bottone di aggiornamento e nasconde l'icona animata
-        self.check_updates_button.configure(state='normal')
-        self.check_updates_button.configure(image='')
