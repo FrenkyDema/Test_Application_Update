@@ -26,7 +26,7 @@
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/FrenkyDema/Test_Application_Update/issues/new/choose). You can also take a look at the [contributing guide](https://github.com/FrenkyDema/Test_Application_Update/blob/main/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/FrenkyDema/Test_Application_Update/issues/new/choose). You can also take a look at the [contributing guide](https://github.com/FrenkyDema/Test_Application_Update/blob/main/.github/CONTRIBUTING.md).
 
 ## Show your support
 
