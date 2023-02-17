@@ -8,17 +8,17 @@
 
 [![CodeQL](https://github.com/FrenkyDema/Test_Application_Update/actions/workflows/codeql.yml/badge.svg)](https://github.com/FrenkyDema/Test_Application_Update/actions/workflows/codeql.yml)
 
-> Test Application Update è un'applicazione desktop sviluppata in Python per mostrare come eseguire l'aggiornamento di un'applicazione desktop in modo automatico. L'applicazione controlla la disponibilità di nuove versioni su GitHub, scarica il file di aggiornamento e lo sostituisce con il vecchio file dell'applicazione. L'applicazione include una semplice interfaccia utente con un pulsante per avviare il processo di aggiornamento. L'applicazione è stata sviluppata utilizzando le librerie Python tkinter, requests, e aiohttp. L'applicazione è cross-platform e può essere eseguita su Windows, macOS e Linux.
+Test Application Update is a desktop application developed in Python to demonstrate how to perform automatic desktop application updates. The application checks for the availability of new versions on GitHub, downloads the update file, and replaces it with the old application file. The application includes a simple user interface with a button to start the update process. The application was developed using Python libraries customtkinter, requests, and aiohttp.
 
 ## Usage
 
-1. Per scaricare l'ultima versione dell'app direttamente dalle release di GitHub, segui questi passaggi:
-    - Vai alla pagina delle release di GitHub dell'applicazione.
-    - Trova la versione più recente dell'applicazione e cerca il file .exe.
-    - Fai clic sul link per scaricare il file .exe.
-2. Dopo aver scaricato il file .exe, segui questi passaggi per aprire l'applicazione:
-    - Trova il file .exe appena scaricato sul tuo computer.
-    - Fai doppio clic sul file per avviare l'applicazione.
+1. To download the latest version of the app directly from GitHub releases, follow these steps:
+    - Go to the GitHub releases page of the application.
+    - Find the latest version of the application and look for the .exe file.
+    - Click the link to download the .exe file.
+2. After downloading the .exe file, follow these steps to open the application:
+    - Find the downloaded .exe file on your computer.
+    - Double-click the file to start the application.
 
 ## Author
 
