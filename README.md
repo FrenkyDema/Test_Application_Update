@@ -10,9 +10,13 @@
 
 ## Usage
 
-```sh
-Per scaricare l'ultima versione dell'app direttamente dalle release di GitHub, segui questi passaggi:
-```
+1. Per scaricare l'ultima versione dell'app direttamente dalle release di GitHub, segui questi passaggi:
+    - Vai alla pagina delle release di GitHub dell'applicazione.
+    - Trova la versione più recente dell'applicazione e cerca il file .exe.
+    - Fai clic sul link per scaricare il file .exe.
+2. Dopo aver scaricato il file .exe, segui questi passaggi per aprire l'applicazione:
+    - Trova il file .exe appena scaricato sul tuo computer.
+    - Fai doppio clic sul file per avviare l'applicazione.
 
 ## Author
 
