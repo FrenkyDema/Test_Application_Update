@@ -6,6 +6,8 @@
   </a>
 </p>
 
+[![CodeQL](https://github.com/FrenkyDema/Test_Application_Update/actions/workflows/codeql.yml/badge.svg)](https://github.com/FrenkyDema/Test_Application_Update/actions/workflows/codeql.yml)
+
 > Test Application Update è un'applicazione desktop sviluppata in Python per mostrare come eseguire l'aggiornamento di un'applicazione desktop in modo automatico. L'applicazione controlla la disponibilità di nuove versioni su GitHub, scarica il file di aggiornamento e lo sostituisce con il vecchio file dell'applicazione. L'applicazione include una semplice interfaccia utente con un pulsante per avviare il processo di aggiornamento. L'applicazione è stata sviluppata utilizzando le librerie Python tkinter, requests, e aiohttp. L'applicazione è cross-platform e può essere eseguita su Windows, macOS e Linux.
 
 ## Usage
