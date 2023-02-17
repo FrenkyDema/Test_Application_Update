@@ -18,7 +18,7 @@ image_path = 'src\\resources\\icons\\'
 language_path = 'src\\resources\\languages\\'
 
 APP_NAME = "Test_Application_Update"
-VERSION = "v0.0.3"
+VERSION = "v0.0.2"
 CONFIG_FILE = "config.json"
 
 # ================== Temp Files functions ==================
